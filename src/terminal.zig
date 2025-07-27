@@ -5,7 +5,7 @@ const builtin = @import("builtin");
 pub const Event = union(enum) {
     key: Key,
     resize: struct { width: u16, height: u16 },
-    mouse: MouseEvent,
+    mouse: Mouse,
 
     pub const Key = union(enum) {
         char: u8,
@@ -19,7 +19,7 @@ pub const Event = union(enum) {
         pub const Special = enum { escape, enter, backspace, tab, delete, home, end, page_up, page_down };
     };
 
-    pub const MouseEvent = struct {
+    pub const Mouse = struct {
         x: u16,
         y: u16,
         button: Button,
