@@ -252,7 +252,7 @@ pub fn main() !void {
                 ));
             } else {
                 screen.setCell(8 + @as(u16, @intCast(i)), ui_y, '█', TermColor.fromRGB(
-                    pterm.colors.dark_gray.rgb,
+                    pterm.colors.lighten(pterm.colors.black.rgb, 0.2),
                     pterm.colors.black.rgb,
                 ));
             }
