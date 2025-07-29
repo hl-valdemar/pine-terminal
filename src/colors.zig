@@ -12,29 +12,6 @@ pub const yellow = ColorValue{ .rgb = .{ .r = 255, .g = 255, .b = 0 } };
 pub const cyan = ColorValue{ .rgb = .{ .r = 0, .g = 255, .b = 255 } };
 pub const magenta = ColorValue{ .rgb = .{ .r = 255, .g = 0, .b = 255 } };
 
-// grays
-pub const dark_gray = ColorValue{ .rgb = .{ .r = 64, .g = 64, .b = 64 } };
-pub const gray = ColorValue{ .rgb = .{ .r = 128, .g = 128, .b = 128 } };
-pub const light_gray = ColorValue{ .rgb = .{ .r = 192, .g = 192, .b = 192 } };
-
-// game-specific colors
-pub const stone = ColorValue{ .rgb = .{ .r = 136, .g = 140, .b = 141 } };
-pub const dirt = ColorValue{ .rgb = .{ .r = 139, .g = 90, .b = 43 } };
-pub const grass = ColorValue{ .rgb = .{ .r = 46, .g = 125, .b = 50 } };
-pub const water = ColorValue{ .rgb = .{ .r = 33, .g = 150, .b = 243 } };
-pub const gold = ColorValue{ .rgb = .{ .r = 255, .g = 215, .b = 0 } };
-pub const blood = ColorValue{ .rgb = .{ .r = 138, .g = 7, .b = 7 } };
-pub const wood = ColorValue{ .rgb = .{ .r = 121, .g = 85, .b = 61 } };
-pub const fire = ColorValue{ .rgb = .{ .r = 255, .g = 87, .b = 34 } };
-pub const ice = ColorValue{ .rgb = .{ .r = 142, .g = 231, .b = 255 } };
-pub const poison = ColorValue{ .rgb = .{ .r = 118, .g = 255, .b = 3 } };
-
-// ui colors
-pub const health_red = ColorValue{ .rgb = .{ .r = 229, .g = 57, .b = 53 } };
-pub const health_green = ColorValue{ .rgb = .{ .r = 67, .g = 160, .b = 71 } };
-pub const mana_blue = ColorValue{ .rgb = .{ .r = 41, .g = 121, .b = 255 } };
-pub const exp_yellow = ColorValue{ .rgb = .{ .r = 255, .g = 235, .b = 59 } };
-
 pub const ColorRGB = struct { r: u8, g: u8, b: u8 };
 
 pub const ColorValue = union(enum) {
