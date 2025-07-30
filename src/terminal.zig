@@ -15,8 +15,23 @@ pub const Event = union(enum) {
         arrow: Arrow,
         special: Special,
 
-        pub const Arrow = enum { up, down, left, right };
-        pub const Special = enum { escape, enter, backspace, tab, delete, home, end, page_up, page_down };
+        pub const Arrow = enum {
+            up,
+            down,
+            left,
+            right,
+        };
+        pub const Special = enum {
+            escape,
+            enter,
+            backspace,
+            tab,
+            delete,
+            home,
+            end,
+            page_up,
+            page_down,
+        };
     };
 
     pub const Mouse = struct {
@@ -25,8 +40,18 @@ pub const Event = union(enum) {
         button: Button,
         action: Action,
 
-        pub const Button = enum { left, middle, right, scroll_up, scroll_down };
-        pub const Action = enum { press, release, drag };
+        pub const Button = enum {
+            left,
+            middle,
+            right,
+            scroll_up,
+            scroll_down,
+        };
+        pub const Action = enum {
+            press,
+            release,
+            drag,
+        };
     };
 };
 
