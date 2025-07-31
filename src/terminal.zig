@@ -114,28 +114,16 @@ pub const Terminal = switch (builtin.os.tag) {
                 try self.write("\x1B[?1049h"); // enter alternate screen
             }
 
-            if (config.hide_cursor) {
-                try self.write("\x1B[?25l"); // hide cursor
-            }
-
-            if (config.enable_mouse) {
-                try self.write("\x1B[?1000h"); // enable mouse reporting
-                try self.write("\x1B[?1006h"); // enable SGR mouse mode
-            }
+            if (config.hide_cursor) self.hideCursor();
+            if (config.enable_mouse) self.enableMouse();
 
             return self;
         }
 
         /// Restore terminal to original state.
         pub fn deinit(self: *Terminal) void {
-            if (self.config.enable_mouse) {
-                self.write("\x1B[?1006l") catch {};
-                self.write("\x1B[?1000l") catch {};
-            }
-
-            if (self.config.hide_cursor) {
-                self.write("\x1B[?25h") catch {}; // show cursor
-            }
+            if (self.config.enable_mouse) self.disableMouse();
+            if (self.config.hide_cursor) self.showCursor();
 
             if (self.config.alternate_screen) {
                 self.write("\x1B[?1049l") catch {}; // exit alternate screen
@@ -143,6 +131,28 @@ pub const Terminal = switch (builtin.os.tag) {
 
             // restore original terminal settings
             _ = std.c.tcsetattr(std.c.STDIN_FILENO, .FLUSH, &self.old_termios);
+        }
+
+        /// Hide the cursor.
+        pub fn hideCursor(self: *Terminal) void {
+            self.write("\x1B[?25l") catch {};
+        }
+
+        /// Show the cursor.
+        pub fn showCursor(self: *Terminal) void {
+            self.write("\x1B[?25h") catch {};
+        }
+
+        /// Disable the mouse.
+        pub fn disableMouse(self: *Terminal) void {
+            self.write("\x1B[?1006l") catch {};
+            self.write("\x1B[?1000l") catch {};
+        }
+
+        /// Enable the mouse.
+        pub fn enableMouse(self: *Terminal) void {
+            self.write("\x1B[?1000h") catch {}; // enable mouse reporting
+            self.write("\x1B[?1006h") catch {}; // enable SGR mouse mode
         }
 
         /// Read next input event (blocking).
