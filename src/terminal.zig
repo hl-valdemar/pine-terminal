@@ -140,8 +140,21 @@ const platform = switch (builtin.os.tag) {
         pub const winsize = std.posix.winsize; // guess they forgot to make it pub, so we import from posix instead...
         pub const TIOCGWINSZ = os.T.IOCGWINSZ;
 
-        pub const ioctl = os.ioctl;
-        pub const read = os.read;
+        pub fn ioctl(fd: i32, request: u32, arg: *winsize) i32 {
+            return @intCast(os.ioctl(fd, request, @intFromPtr(arg)));
+        }
+
+        pub fn read(fd: i32, buf: [*]u8, count: usize) isize {
+            const result = os.read(fd, buf[0..count]);
+            if (result) |bytes| {
+                return @intCast(bytes);
+            } else |_| {
+                return -1;
+            }
+        }
+
+        // pub const ioctl = os.ioctl;
+        // pub const read = os.read;
     },
     else => @compileError("Unsupported platform. Only Linux and macOS are currently supported."),
 };
