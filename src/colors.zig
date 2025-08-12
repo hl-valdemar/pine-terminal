@@ -150,34 +150,34 @@ pub fn palette256ToRgb(index: u8) ColorRGB {
     return .{ .r = gray_level, .g = gray_level, .b = gray_level };
 }
 
-/// Terminal capability detection.
-pub const TerminalCapabilities = struct {
-    supports_rgb: bool = false,
-    supports_256: bool = true,
-
-    /// Detect terminal color capabilities from environment.
-    pub fn detect() TerminalCapabilities {
-        var caps = TerminalCapabilities{};
-
-        // check COLORTERM for truecolor support
-        if (std.process.getEnvVarOwned(std.heap.page_allocator, "COLORTERM")) |colorterm| {
-            defer std.heap.page_allocator.free(colorterm);
-            if (std.mem.eql(u8, colorterm, "truecolor") or std.mem.eql(u8, colorterm, "24bit")) {
-                caps.supports_rgb = true;
-            }
-        } else |_| {}
-
-        // check TERM for 256 color support
-        if (std.process.getEnvVarOwned(std.heap.page_allocator, "TERM")) |term| {
-            defer std.heap.page_allocator.free(term);
-            if (std.mem.indexOf(u8, term, "256color") != null) {
-                caps.supports_256 = true;
-            }
-        } else |_| {}
-
-        return caps;
-    }
-};
+// /// Terminal capability detection.
+// pub const TerminalCapabilities = struct {
+//     supports_rgb: bool = false,
+//     supports_256: bool = true,
+//
+//     /// Detect terminal color capabilities from environment.
+//     pub fn detect() TerminalCapabilities {
+//         var caps = TerminalCapabilities{};
+//
+//         // check COLORTERM for truecolor support
+//         if (std.process.getEnvVarOwned(std.heap.page_allocator, "COLORTERM")) |colorterm| {
+//             defer std.heap.page_allocator.free(colorterm);
+//             if (std.mem.eql(u8, colorterm, "truecolor") or std.mem.eql(u8, colorterm, "24bit")) {
+//                 caps.supports_rgb = true;
+//             }
+//         } else |_| {}
+//
+//         // check TERM for 256 color support
+//         if (std.process.getEnvVarOwned(std.heap.page_allocator, "TERM")) |term| {
+//             defer std.heap.page_allocator.free(term);
+//             if (std.mem.indexOf(u8, term, "256color") != null) {
+//                 caps.supports_256 = true;
+//             }
+//         } else |_| {}
+//
+//         return caps;
+//     }
+// };
 
 // utility: dynamic lighting effect
 pub fn calculateLighting(
