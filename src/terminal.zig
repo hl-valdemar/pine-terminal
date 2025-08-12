@@ -145,7 +145,7 @@ const platform = switch (builtin.os.tag) {
         }
 
         pub fn read(fd: i32, buf: [*]u8, count: usize) isize {
-            const result = os.read(fd, buf[0..count]);
+            const result = os.read(fd, buf, count);
             if (result) |bytes| {
                 return @intCast(bytes);
             } else |_| {
