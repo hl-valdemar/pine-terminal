@@ -147,9 +147,6 @@ const platform = switch (builtin.os.tag) {
         pub fn read(fd: i32, buf: [*]u8, count: usize) isize {
             return @intCast(os.read(fd, buf, count));
         }
-
-        // pub const ioctl = os.ioctl;
-        // pub const read = os.read;
     },
     else => @compileError("Unsupported platform. Only Linux and macOS are currently supported."),
 };
@@ -174,7 +171,7 @@ pub const Terminal = struct {
         // configure raw mode
         self.raw_termios = self.old_termios;
 
-        // Platform-specific flag setting
+        // platform-specific flag setting
         switch (builtin.os.tag) {
             .linux => {
                 self.raw_termios.lflag.ECHO = false;
@@ -414,15 +411,6 @@ pub const Terminal = struct {
         }
         return .{ .width = size.col, .height = size.row };
     }
-
-    // /// Get terminal size.
-    // pub fn getSize(_: *Terminal) !struct { width: u16, height: u16 } {
-    //     var size: std.c.winsize = undefined;
-    //     if (std.c.ioctl(std.c.STDOUT_FILENO, std.c.T.IOCGWINSZ, &size) != 0) {
-    //         return error.TerminalSizeError;
-    //     }
-    //     return .{ .width = size.col, .height = size.row };
-    // }
 
     /// Write raw data to terminal.
     pub fn write(self: *Terminal, data: []const u8) !void {
