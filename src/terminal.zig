@@ -98,7 +98,7 @@ const platform = switch (builtin.os.tag) {
         pub const VTIME = std.c.V.TIME;
         pub const VMIN = std.c.V.MIN;
 
-        // pub const winsize = std.c.winsize;
+        pub const winsize = std.c.winsize;
         pub const TIOCGWINSZ = std.c.T.IOCGWINSZ;
 
         pub const ioctl = std.c.ioctl;
@@ -137,21 +137,11 @@ const platform = switch (builtin.os.tag) {
         pub const VTIME = os.V.TIME;
         pub const VMIN = os.V.MIN;
 
-        // pub const winsize = os.winsize;
+        pub const winsize = os.winsize;
         pub const TIOCGWINSZ = os.T.IOCGWINSZ;
 
-        // pub fn ioctl(fd: i32, request: u32, arg: *winsize) i32 {
-        //     return @intCast(os.ioctl(fd, request, @intFromPtr(arg)));
-        // }
-
-        pub fn read(fd: i32, buf: [*]u8, count: usize) isize {
-            const result = os.read(fd, buf[0..count]);
-            if (result) |bytes| {
-                return @intCast(bytes);
-            } else |_| {
-                return -1;
-            }
-        }
+        pub const ioctl = os.ioctl;
+        pub const read = os.read;
     },
     else => @compileError("Unsupported platform. Only Linux and macOS are currently supported."),
 };
@@ -408,11 +398,19 @@ pub const Terminal = struct {
         try self.write("\x1B[0m");
     }
 
+    /// Get terminal size.
+    pub fn getSize(_: *Terminal) !struct { width: u16, height: u16 } {
+        var size: platform.winsize = undefined;
+        if (platform.ioctl(platform.STDOUT_FILENO, platform.TIOCGWINSZ, &size) != 0) {
+            return error.TerminalSizeError;
+        }
+        return .{ .width = size.col, .height = size.row };
+    }
+
     // /// Get terminal size.
-    // pub fn getSize(self: *Terminal) !struct { width: u16, height: u16 } {
-    //     _ = self;
-    //     var size: platform.winsize = undefined;
-    //     if (platform.ioctl(platform.STDOUT_FILENO, platform.TIOCGWINSZ, &size) != 0) {
+    // pub fn getSize(_: *Terminal) !struct { width: u16, height: u16 } {
+    //     var size: std.c.winsize = undefined;
+    //     if (std.c.ioctl(std.c.STDOUT_FILENO, std.c.T.IOCGWINSZ, &size) != 0) {
     //         return error.TerminalSizeError;
     //     }
     //     return .{ .width = size.col, .height = size.row };
