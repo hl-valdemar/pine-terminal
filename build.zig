@@ -40,9 +40,13 @@ pub fn build(b: *std.Build) !void {
     const docs_step = b.step("docs", "Install docs into zig-out/docs");
     docs_step.dependOn(&install_docs.step);
 
+    var gpa = std.heap.DebugAllocator(.{}).init;
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
+
     // create executable modules for all examples
     try addExamples(
-        std.heap.c_allocator,
+        allocator,
         b,
         EXAMPLES_DIR,
         &.{
