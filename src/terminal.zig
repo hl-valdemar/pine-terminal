@@ -67,6 +67,43 @@ pub const Config = struct {
 
 /// Platform-specific constants and functions
 const platform = switch (builtin.os.tag) {
+    .macos => struct {
+        // Use std.c for macOS
+        pub const STDIN_FILENO = std.c.STDIN_FILENO;
+        pub const STDOUT_FILENO = std.c.STDOUT_FILENO;
+
+        pub const tcgetattr = std.c.tcgetattr;
+        pub const tcsetattr = std.c.tcsetattr;
+        pub const TCSA = std.c.TCSA;
+
+        pub const termios = std.c.termios;
+        pub const cc_t = std.c.cc_t;
+        pub const speed_t = std.c.speed_t;
+        pub const tcflag_t = std.c.tcflag_t;
+
+        // Terminal control flags - need to access through the termios struct fields
+        pub const ECHO = true; // will be set via termios.lflag.ECHO
+        pub const ICANON = true;
+        pub const ISIG = true;
+        pub const IEXTEN = true;
+        pub const IXON = true;
+        pub const ICRNL = true;
+        pub const BRKINT = true;
+        pub const INPCK = true;
+        pub const ISTRIP = true;
+        pub const OPOST = true;
+        pub const CS8 = std.c.CSIZE.CS8;
+        pub const CSIZE = true;
+
+        pub const VTIME = std.c.V.TIME;
+        pub const VMIN = std.c.V.MIN;
+
+        pub const winsize = std.c.winsize;
+        pub const TIOCGWINSZ = std.c.T.IOCGWINSZ;
+
+        pub const ioctl = std.c.ioctl;
+        pub const read = std.c.read;
+    },
     .linux => struct {
         const os = std.os.linux;
 
@@ -84,18 +121,18 @@ const platform = switch (builtin.os.tag) {
         pub const tcflag_t = os.tcflag_t;
 
         // Terminal control flags
-        pub const ECHO = os.ECHO;
-        pub const ICANON = os.ICANON;
-        pub const ISIG = os.ISIG;
-        pub const IEXTEN = os.IEXTEN;
-        pub const IXON = os.IXON;
-        pub const ICRNL = os.ICRNL;
-        pub const BRKINT = os.BRKINT;
-        pub const INPCK = os.INPCK;
-        pub const ISTRIP = os.ISTRIP;
-        pub const OPOST = os.OPOST;
-        pub const CS8 = os.CS8;
-        pub const CSIZE = os.CSIZE;
+        pub const ECHO = true;
+        pub const ICANON = true;
+        pub const ISIG = true;
+        pub const IEXTEN = true;
+        pub const IXON = true;
+        pub const ICRNL = true;
+        pub const BRKINT = true;
+        pub const INPCK = true;
+        pub const ISTRIP = true;
+        pub const OPOST = true;
+        pub const CS8 = os.CSIZE.CS8;
+        pub const CSIZE = true;
 
         pub const VTIME = os.V.TIME;
         pub const VMIN = os.V.MIN;
@@ -115,43 +152,6 @@ const platform = switch (builtin.os.tag) {
                 return -1;
             }
         }
-    },
-    .macos => struct {
-        // Use std.c for macOS
-        pub const STDIN_FILENO = std.c.STDIN_FILENO;
-        pub const STDOUT_FILENO = std.c.STDOUT_FILENO;
-
-        pub const tcgetattr = std.c.tcgetattr;
-        pub const tcsetattr = std.c.tcsetattr;
-        pub const TCSA = std.c.TCSA;
-
-        pub const termios = std.c.termios;
-        pub const cc_t = std.c.cc_t;
-        pub const speed_t = std.c.speed_t;
-        pub const tcflag_t = std.c.tcflag_t;
-
-        // Terminal control flags - need to access through the termios struct fields
-        pub const ECHO = true; // Will be set via termios.lflag.ECHO
-        pub const ICANON = true;
-        pub const ISIG = true;
-        pub const IEXTEN = true;
-        pub const IXON = true;
-        pub const ICRNL = true;
-        pub const BRKINT = true;
-        pub const INPCK = true;
-        pub const ISTRIP = true;
-        pub const OPOST = true;
-        pub const CS8 = std.c.CS.CS8;
-        pub const CSIZE = true;
-
-        pub const VTIME = std.c.V.TIME;
-        pub const VMIN = std.c.V.MIN;
-
-        pub const winsize = std.c.winsize;
-        pub const TIOCGWINSZ = std.c.T.IOCGWINSZ;
-
-        pub const ioctl = std.c.ioctl;
-        pub const read = std.c.read;
     },
     else => @compileError("Unsupported platform. Only Linux and macOS are currently supported."),
 };
