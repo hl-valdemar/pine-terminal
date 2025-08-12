@@ -179,15 +179,21 @@ pub const Terminal = struct {
         // Platform-specific flag setting
         switch (builtin.os.tag) {
             .linux => {
-                // Linux uses direct flag manipulation
-                self.raw_termios.lflag &= ~@as(platform.tcflag_t, platform.ECHO | platform.ICANON | platform.ISIG | platform.IEXTEN);
-                self.raw_termios.iflag &= ~@as(platform.tcflag_t, platform.IXON | platform.ICRNL | platform.BRKINT | platform.INPCK | platform.ISTRIP);
-                self.raw_termios.oflag &= ~@as(platform.tcflag_t, platform.OPOST);
-                self.raw_termios.cflag &= ~@as(platform.tcflag_t, platform.CSIZE);
-                self.raw_termios.cflag |= platform.CS8;
+                self.raw_termios.lflag.ECHO = false;
+                self.raw_termios.lflag.ICANON = false;
+                self.raw_termios.lflag.ISIG = false;
+                self.raw_termios.lflag.IEXTEN = false;
+
+                self.raw_termios.iflag.IXON = false;
+                self.raw_termios.iflag.ICRNL = false;
+                self.raw_termios.iflag.BRKINT = false;
+                self.raw_termios.iflag.INPCK = false;
+                self.raw_termios.iflag.ISTRIP = false;
+
+                self.raw_termios.oflag.OPOST = false;
+                self.raw_termios.cflag.CSIZE = .CS8;
             },
             .macos => {
-                // macOS uses struct field access
                 self.raw_termios.lflag.ECHO = false;
                 self.raw_termios.lflag.ICANON = false;
                 self.raw_termios.lflag.ISIG = false;
