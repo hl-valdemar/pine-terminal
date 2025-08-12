@@ -137,7 +137,7 @@ const platform = switch (builtin.os.tag) {
         pub const VTIME = os.V.TIME;
         pub const VMIN = os.V.MIN;
 
-        pub const winsize = os.winsize;
+        pub const winsize = std.posix.winsize; // guess they forgot to make it pub, so we import from posix instead...
         pub const TIOCGWINSZ = os.T.IOCGWINSZ;
 
         pub const ioctl = os.ioctl;
