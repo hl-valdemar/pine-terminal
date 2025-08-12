@@ -98,7 +98,7 @@ const platform = switch (builtin.os.tag) {
         pub const VTIME = std.c.V.TIME;
         pub const VMIN = std.c.V.MIN;
 
-        pub const winsize = std.c.winsize;
+        // pub const winsize = std.c.winsize;
         pub const TIOCGWINSZ = std.c.T.IOCGWINSZ;
 
         pub const ioctl = std.c.ioctl;
@@ -137,12 +137,12 @@ const platform = switch (builtin.os.tag) {
         pub const VTIME = os.V.TIME;
         pub const VMIN = os.V.MIN;
 
-        pub const winsize = os.winsize;
+        // pub const winsize = os.winsize;
         pub const TIOCGWINSZ = os.T.IOCGWINSZ;
 
-        pub fn ioctl(fd: i32, request: u32, arg: *winsize) i32 {
-            return @intCast(os.ioctl(fd, request, @intFromPtr(arg)));
-        }
+        // pub fn ioctl(fd: i32, request: u32, arg: *winsize) i32 {
+        //     return @intCast(os.ioctl(fd, request, @intFromPtr(arg)));
+        // }
 
         pub fn read(fd: i32, buf: [*]u8, count: usize) isize {
             const result = os.read(fd, buf[0..count]);
@@ -408,15 +408,15 @@ pub const Terminal = struct {
         try self.write("\x1B[0m");
     }
 
-    /// Get terminal size.
-    pub fn getSize(self: *Terminal) !struct { width: u16, height: u16 } {
-        _ = self;
-        var size: platform.winsize = undefined;
-        if (platform.ioctl(platform.STDOUT_FILENO, platform.TIOCGWINSZ, &size) != 0) {
-            return error.TerminalSizeError;
-        }
-        return .{ .width = size.col, .height = size.row };
-    }
+    // /// Get terminal size.
+    // pub fn getSize(self: *Terminal) !struct { width: u16, height: u16 } {
+    //     _ = self;
+    //     var size: platform.winsize = undefined;
+    //     if (platform.ioctl(platform.STDOUT_FILENO, platform.TIOCGWINSZ, &size) != 0) {
+    //         return error.TerminalSizeError;
+    //     }
+    //     return .{ .width = size.col, .height = size.row };
+    // }
 
     /// Write raw data to terminal.
     pub fn write(self: *Terminal, data: []const u8) !void {
